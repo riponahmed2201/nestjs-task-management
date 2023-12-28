@@ -5,18 +5,19 @@
 ## AppModule (root)
 
 - TasksModule
-    - TasksController
-    - TaskEntity
-    - TaskService
-    - TaskRepository
-    - Status ValidationPipe
+
+  - TasksController
+  - TaskEntity
+  - TaskService
+  - TaskRepository
+  - Status ValidationPipe
 
 - AuthModule
-    - AuthController
-    - UserRepository
-    - AuthService
-    - JwtStrategy
-    - UserEntity
+  - AuthController
+  - UserRepository
+  - AuthService
+  - JwtStrategy
+  - UserEntity
 
 ## Objectives: NestJs
 
@@ -55,7 +56,6 @@
 - Using JWT tokens (JSON Web Token).
 - Password hashing, salts and properly storing passwords
 
-
 ## NestJS Module
 
 - Each application has at least one module - the root module. That is the starting point of the application.
@@ -69,7 +69,7 @@
 - The decorator provides metadata that Nest uses to organize the application structure.
 
 ## @Module Decorator Properties
- 
+
 - `providers: ` Array of providers to be available within the module via dependency injection.
 - `controller: ` Array of controllers to be instantiated within the module.
 - `exports: ` Array of providers to export to other modules.
@@ -119,53 +119,55 @@ export class TasksController {
 
 ```
 
-## HTTP request incomming 
+## HTTP request incomming
+
 - Request route to Controller, handler is called with arguments
-    - NestJS will parse the relevant request data and it will be available in the handler.
+  - NestJS will parse the relevant request data and it will be available in the handler.
 - Hanler hanldes the request
-    - Perform operations such as communication with a service. For example, retrieving an item from the database
-- Handler returns response value 
-    - Response can be of any type and even an exception.
-    - Nest will wrap the returned value as an HTTP response and return it to the client.
+  - Perform operations such as communication with a service. For example, retrieving an item from the database
+- Handler returns response value
+
+  - Response can be of any type and even an exception.
+  - Nest will wrap the returned value as an HTTP response and return it to the client.
 
 - `AuthController` <br>
-    /auth
+  /auth
 
-    `signin()`  <br>
-    POST /auth/signin
+  `signin()` <br>
+  POST /auth/signin
 
-    `signout()`  <br>
-    POST /auth/signout
+  `signout()` <br>
+  POST /auth/signout
 
 - `TasksController` <br>
-    /tasks
+  /tasks
 
-    `getAllTasks()`  <br>
-    GET /tasks
+  `getAllTasks()` <br>
+  GET /tasks
 
-    `getTaskById()`  <br>
-    GET /tasks/:id
+  `getTaskById()` <br>
+  GET /tasks/:id
 
-    `createTask()`  <br>
-    POST /tasks
+  `createTask()` <br>
+  POST /tasks
 
-    `deleteTask()`  <br>
-    DELETE /tasks/:id
+  `deleteTask()` <br>
+  DELETE /tasks/:id
 
-    `updateTaskStatus()`  <br>
-    PATCH /tasks/:id
+  `updateTaskStatus()` <br>
+  PATCH /tasks/:id
 
 - `UsersController` <br>
-    /tasks
+  /tasks
 
-    `getAllUsers()`  <br>
-    GET /users
+  `getAllUsers()` <br>
+  GET /users
 
-    `createUser()`  <br>
-    POST /users
+  `createUser()` <br>
+  POST /users
 
-    `deleteUser()`  <br>
-    DELETE /users/:id
+  `deleteUser()` <br>
+  DELETE /users/:id
 
 ## NestJS Providers
 
@@ -180,45 +182,72 @@ export class TasksController {
 - Common concept within software development and are not exclusive NestJS, JavaScript or back-end development.
 - Singleton when wrapped with `@Injectable()` and provided to a module. That means, the same instance will be shared across the application - acting as a single source of truth.
 - The main source of business logic. For example, a service will be called from a controller to validate data, create an item in the database and return a response.
-- Module 
-    - Controller
-        - Service A
-        - Service B
-        - Service C
-- Example: 
-    ```ts
-    import { TasksController } from './tasks.controller';
-    import { TasksService } from './tasks.service';
-    import { LoggerService } from './shared/logger.service';
+- Module
+  - Controller
+    - Service A
+    - Service B
+    - Service C
+- Example:
 
-    @Module({
-        controllers: [
-            TasksController
-        ],
-        providers: [
-            TasksService,
-            LoggerService
-        ]
-    })
+  ```ts
+  import { TasksController } from './tasks.controller';
+  import { TasksService } from './tasks.service';
+  import { LoggerService } from './shared/logger.service';
 
-    export class TasksModule {}
-    ```
+  @Module({
+    controllers: [TasksController],
+    providers: [TasksService, LoggerService],
+  })
+  export class TasksModule {}
+  ```
 
 ## Dependency Injection in NestJS
+
 - Any component within the NestJS ecosystem can inject a provider that is decorated with the `@Injectable.`
 - We define the dependencies in the constructor of the class. NestJs will take care of the injection for us, and will then be available as a class property.
-- Example 
-    ```ts
-    import { TasksService } from './tasks.service';
+- Example
 
-    @Controller('/tasks)
-    export class TasksController {
-        constructor(private tasksService: TasksService ) {}
+  ```ts
+  import { TasksService } from './tasks.service';
 
-        @Get()
-        async getAllTasks() {
-            return await this.tasksService.getAllTasks();
-        }
-    }
+  @Controller('/tasks)
+  export class TasksController {
+      constructor(private tasksService: TasksService ) {}
 
-    ```
+      @Get()
+      async getAllTasks() {
+          return await this.tasksService.getAllTasks();
+      }
+  }
+
+  ```
+
+## Data Transfer Object (DTO)
+
+- "A data transfer object (DTO) is an object that carries data between processes." - "Data Transfer Object", Wikipedia
+- "A data transfer object is an object that is used to encapsulate data, and send it from one subsystem of an application to another." - "What is a Data Transfer Object", StackOverflow
+
+- "A DTO is an object that defines how the data will be sent over the network." - NestJS Documentation
+- More about DTOs
+  - Common concept in software development that is not specific to NestJS.
+  - Result in more bulletproof code, as it can be used as a TypeScript type.
+  - Do not have any behavior except for storage, retrieval, serialization and deseialization of its own data.
+  - Result in increased performance (although negligible in small applications).
+  - Can be usefull for data validation.
+  - A DTO is `NOT` a model definition. It defines the shape of data for a specific case, for example - creating a task.
+  - Can be defined using an `interface` or a class.
+
+### Classes VS Interface for DTOs
+
+- Data Transfer Objects (DTOs) can be defined as classes or interfaces.
+- The recommended approach is to use `classes,` also clearly documented in the NestJS documentation.
+- Classes allow us to do more, and since they are a part of JavaScript, they will be preserved post-compilation.
+- NestJS cannot refer to interfaces in run-time, but can refer to classes.
+- `TLDR: Classes are the way to go for DTOs.`
+
+### Important note! (DTOs)
+
+- Data Transfer Objects are `NOT` mandatory.
+- You can still develop applications without using DTOs.
+- However, the value they add makes it worthwhile to use them when applicable.
+- Applying the DTO pattern as soon as possible will make it easy for you to maintain and refactor your code.
