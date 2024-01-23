@@ -321,3 +321,59 @@ It depends.
   </p>
 
 - `npm install class-validator class-transformer --save`
+
+## Object Relational Mapping (ORM)
+
+- object-Relational Mapping (ORM) is a technique that lets you query and manipulate data from a database, using and object-oriented paradigm.
+
+- There are many ORM libraries that allow developers to communicate to the database using their preferred programming language - rather than sending plain queries directly.
+
+### Pros and Cons of using an ORM library
+
+`Pros: `
+
+- Writing the data model in one place - easier to maintain. Less repetition.
+- Lots of things done automatically - database handling, data types, relations etcetera.
+- No need to write SQL syntax (easy to learn, hard to master). Using your natural way of coding.
+- Database abstraction - you can change the database type whenever you wish.
+- Leverages OOP, therefore things like inheritance are easy to achieve.
+
+`Cons: `
+
+- you have to learn it, and ORM libraries are not always simple.
+- Performance is alright, but it's easy to neglect.
+- Makes it easy to forget (or never learn) what's happening behind the scenes, which can lead to a variety of maintainability issues.
+
+## TypeORM
+
+- TypeORM is an ORM library that can run in Node.js and be used with TypeScript (or JavaScript)
+- Helps us define and manage entities, repositories, columns, relations, replication, indices, queries, logging and so much more.
+
+### Example
+
+- Retrieving all tasks owned by "Ashley" and are of status "Done"
+
+`TypeORM: `
+
+```ts
+const tasks = await Task.find({ status: 'DONE', user: 'Ashley' });
+```
+
+`Pure JavaScript: `
+
+```js
+let tasks;
+db.query(
+  'SELECT * FROM tasks WHERE status = "DONE" AND user "Ashley" ',
+  (err, result) => {
+    if (err) {
+      throw new Error('Could not retrieve tasks!');
+    }
+    tasks = results.rows;
+  },
+);
+```
+
+### Install Library
+
+` npm install @nestjs/typeorm typeorm pg`
